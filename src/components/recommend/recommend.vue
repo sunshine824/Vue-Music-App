@@ -2,7 +2,7 @@
   <div class="recommend">
     <div class="recommend-content">
       <div class="slider-wrapper">
-
+        <slider :data="recommends ? recommends : ''"></slider>
       </div>
       <div class="recommend-list">
         <h1 class="list-title">热门歌单推荐</h1>
@@ -13,7 +13,32 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {getRecommend} from '../../api/recommend'
+  import {ERR_OK} from '../../api/config'
+  import Slider from '../../base/slider/slider'
 
+  export default {
+    data(){
+      return {
+        recommends: []
+      }
+    },
+    components: {
+      slider: Slider
+    },
+    created() {
+      this._getRecommend()
+    },
+    methods: {
+      _getRecommend() {
+        getRecommend().then((res) => {
+          if (res.code === ERR_OK) {
+            this.recommends = res.data.slider
+          }
+        })
+      }
+    }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
@@ -21,7 +46,7 @@
   .recommend
     position: fixed
     width: 100%
-    top: 88px
+    top: 100px
     bottom: 0
     .recommend-content
       height: 100%
@@ -30,6 +55,7 @@
         position: relative
         width: 100%
         overflow: hidden
+        padding-top: 40%
       .recommend-list
         .list-title
           height: 65px
