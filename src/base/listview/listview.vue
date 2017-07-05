@@ -1,7 +1,7 @@
 <template>
-  <div class="listview">
+  <scroll class="listview" ref="listview" :data="data">
     <ul>
-      <li class="list-group" v-for="(group,index) in data" key="index">
+      <li class="list-group" v-for="(group,index) in data" key="index" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
           <li v-for="(item,index) in group.items" class="list-group-item">
@@ -11,20 +11,26 @@
         </ul>
       </li>
     </ul>
-    <div class="list-shortcut" @touchstart="onShortcutTouchStart">
+    <div class="list-shortcut" @touchstart="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove">
       <ul>
         <li v-for="(item,index) in shortcutList" class="item" key="index" :data-index="index">
           {{item}}
         </li>
       </ul>
     </div>
-  </div>
+  </scroll>
 </template>
 
 <script type="text/ecmascript-6">
   import {getData} from '../../common/js/dom'
+  import Scroll from '../../base/scroll/scroll'
+
+  const ANCHOR_HEIGHT = 18
 
   export default{
+    components: {
+      scroll: Scroll
+    },
     props: {
       data: {
         type: Array,
@@ -33,6 +39,9 @@
     },
     data(){
       return {}
+    },
+    created(){
+      this.touch = {}
     },
     computed: {
       shortcutList(){
@@ -43,7 +52,21 @@
     },
     methods: {
       onShortcutTouchStart(e){
-        let anchorIndex = getData(e.target,'index')
+        let anchorIndex = getData(e.target, 'index')
+        let firstTouch = e.touches[0]
+        this.touch.y1 = firstTouch.pageY
+        this.touch.anchorIndex = anchorIndex
+        this._scrollTo(anchorIndex)
+      },
+      onShortcutTouchMove(e){
+        let firstTouch = e.touches[0]
+        this.touch.y2 = firstTouch.pageY
+        let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
+        let anchorIndex = parseInt(this.touch.anchorIndex) + delta
+        this._scrollTo(anchorIndex)
+      },
+      _scrollTo(index){
+        this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
       }
     }
   }
@@ -79,7 +102,7 @@
           color: $color-text-l
           font-size: $font-size-medium
     .list-shortcut
-      position: fixed
+      position: absolute
       z-index: 30
       right: 0
       top: 50%

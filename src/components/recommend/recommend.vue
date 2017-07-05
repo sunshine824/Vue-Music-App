@@ -1,22 +1,24 @@
 <template>
   <div class="recommend">
-    <div class="recommend-content">
-      <div class="slider-wrapper">
-        <slider :data="slider ? slider : ''"></slider>
+    <scroll ref="scroll" class="recommend-content" :data="discList">
+      <div>
+        <div class="slider-wrapper">
+          <slider :data="slider ? slider : ''" :loadImage="loadImage"></slider>
+        </div>
+        <div class="radio-list">
+          <h1 class="list-title">电台推荐</h1>
+          <ul class="radio_wrapper">
+            <radioItem v-for="(item,index) in radioList" key="index" :data="item"></radioItem>
+          </ul>
+        </div>
+        <div class="radio-list">
+          <h1 class="list-title">热门歌单推荐</h1>
+          <ul class="radio_wrapper">
+            <songItem v-for="(item,index) in discList" key="index" :data="item"></songItem>
+          </ul>
+        </div>
       </div>
-      <div class="radio-list">
-        <h1 class="list-title">电台推荐</h1>
-        <ul class="radio_wrapper">
-          <radioItem v-for="(item,index) in radioList" key="index" :data="item"></radioItem>
-        </ul>
-      </div>
-      <div class="radio-list">
-        <h1 class="list-title">热门歌单推荐</h1>
-        <ul class="radio_wrapper">
-          <songItem v-for="(item,index) in discList" key="index" :data="item"></songItem>
-        </ul>
-      </div>
-    </div>
+    </scroll>
     <div class="loading-container" v-show="!discList.length">
       <loading :title="loading_text"></loading>
     </div>
@@ -30,6 +32,7 @@
   import radioItem from '../radio-item/item'
   import songItem from '../song-list-item/item'
   import Loading from '../../base/loading/loading'
+  import Scroll from '../../base/scroll/scroll'
 
   export default {
     data(){
@@ -37,14 +40,16 @@
         slider: [],
         radioList: [],
         discList: [],
-        loading_text:'正在加载...'
+        loading_text: '正在加载...',
+        checkLoaded:false
       }
     },
     components: {
       slider: Slider,
       radioItem: radioItem,
-      songItem:songItem,
-      loading:Loading
+      songItem: songItem,
+      loading: Loading,
+      scroll: Scroll
     },
     created() {
       this._getRecommend()
@@ -66,6 +71,12 @@
             this.discList = res.data.list
           }
         })
+      },
+      loadImage(){
+        if (!this.checkLoaded) {
+          this.$refs.scroll.refresh()
+          this.checkLoaded = true
+        }
       }
     }
   }
@@ -74,6 +85,7 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   .recommend
+    position: fixed
     width: 100%
     top: 100px
     bottom: 0

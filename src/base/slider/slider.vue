@@ -2,7 +2,7 @@
   <swipe class="my-swipe" :speed="900" :auto="3000">
     <swipe-item v-for="(item,index) in data" key="index">
       <a :href="item.linkUrl">
-        <img :src="item.picUrl"/>
+        <img :src="item.picUrl" @load="loadImageItem" class="needsclick"/>
       </a>
     </swipe-item>
   </swipe>
@@ -13,13 +13,26 @@
   import {Swipe, SwipeItem} from 'vue-swipe'
 
   export default{
-    props: ['data'],
+    props: {
+      data: {
+        type: Array,
+        default: []
+      },
+      loadImage: {
+        type: Function
+      }
+    },
     data(){
       return {}
     },
     components: {
       'swipe': Swipe,
       'swipe-item': SwipeItem
+    },
+    methods:{
+      loadImageItem(){
+          this.loadImage()
+      }
     }
   }
 </script>
