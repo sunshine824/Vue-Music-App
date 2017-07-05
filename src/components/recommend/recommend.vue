@@ -45,6 +45,7 @@
       _getRecommend() {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
+              console.log(res.data)
             this.recommends = res.data.slider
           }
         })
@@ -63,7 +64,6 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
   .recommend
-    position: fixed
     width: 100%
     top: 100px
     bottom: 0
