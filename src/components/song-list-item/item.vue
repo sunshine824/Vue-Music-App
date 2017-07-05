@@ -2,7 +2,7 @@
   <li class="item_music">
     <a href="javascript:;" class="list_main">
       <div class="list_media">
-        <img :src="data.imgurl" class="item_img"/>
+        <img v-lazy="data.imgurl" class="item_img"/>
         <span class="icon_play"></span>
         <span class="listen_count">
           <i class="icon_listen"></i>
