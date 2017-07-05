@@ -17,6 +17,9 @@
         </ul>
       </div>
     </div>
+    <div class="loading-container" v-show="!discList.length">
+      <loading :title="loading_text"></loading>
+    </div>
   </div>
 </template>
 
@@ -26,19 +29,22 @@
   import Slider from '../../base/slider/slider'
   import radioItem from '../radio-item/item'
   import songItem from '../song-list-item/item'
+  import Loading from '../../base/loading/loading'
 
   export default {
     data(){
       return {
         slider: [],
         radioList: [],
-        discList: []
+        discList: [],
+        loading_text:'正在加载...'
       }
     },
     components: {
       slider: Slider,
       radioItem: radioItem,
-      songItem:songItem
+      songItem:songItem,
+      loading:Loading
     },
     created() {
       this._getRecommend()
