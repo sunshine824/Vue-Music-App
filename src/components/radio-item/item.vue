@@ -56,7 +56,25 @@
           background-size: 24px 60px
           position: absolute
           display: block
-          z-index:10
+          z-index: 10
+        .listen_count
+          left: 5px
+          bottom: 7px
+          display: block
+          line-height: 12px
+          color: #fff
+          position: absolute
+          z-index: 10
+          .icon_listen
+            display: block
+            float: left
+            width: 10px
+            height: 10px
+            background-position: 0 -50px
+            margin-right: 5px
+            background-image: url("../../../static/list_sprite.png")
+            background-repeat: no-repeat
+            background-size: 24px 60px
       .media_info
         text-align: center
         color: #fff
@@ -67,5 +85,5 @@
           word-wrap: break-word
           font-size 14px
           overflow: hidden
-          text-overflow:ellipsis
+          text-overflow: ellipsis
 </style>

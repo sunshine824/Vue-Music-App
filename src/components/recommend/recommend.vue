@@ -7,16 +7,13 @@
       <div class="radio-list">
         <h1 class="list-title">电台推荐</h1>
         <ul class="radio_wrapper">
-          <!--<li v-for="(item,index) in discList" key="index" class="item">-->
-          <!--<div class="icon">-->
-          <!--<img :src="item.imgurl" width="60" height="60"/>-->
-          <!--</div>-->
-          <!--<div class="text">-->
-          <!--<h2 class="name" v-html="item.creator.name"></h2>-->
-          <!--<p class="desc" v-html="item.dissname"></p>-->
-          <!--</div>-->
-          <!--</li>-->
-          <item v-for="(item,index) in radioList" key="index" :data="item"></item>
+          <radioItem v-for="(item,index) in radioList" key="index" :data="item"></radioItem>
+        </ul>
+      </div>
+      <div class="radio-list">
+        <h1 class="list-title">热门歌单推荐</h1>
+        <ul class="radio_wrapper">
+          <songItem v-for="(item,index) in discList" key="index" :data="item"></songItem>
         </ul>
       </div>
     </div>
@@ -27,7 +24,8 @@
   import {getRecommend, getDiscList} from '../../api/recommend'
   import {ERR_OK} from '../../api/config'
   import Slider from '../../base/slider/slider'
-  import Item from '../item/item'
+  import radioItem from '../radio-item/item'
+  import songItem from '../song-list-item/item'
 
   export default {
     data(){
@@ -39,7 +37,8 @@
     },
     components: {
       slider: Slider,
-      item: Item
+      radioItem: radioItem,
+      songItem:songItem
     },
     created() {
       this._getRecommend()
