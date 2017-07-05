@@ -11,10 +11,19 @@
         </ul>
       </li>
     </ul>
+    <div class="list-shortcut" @touchstart="onShortcutTouchStart">
+      <ul>
+        <li v-for="(item,index) in shortcutList" class="item" key="index" :data-index="index">
+          {{item}}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import {getData} from '../../common/js/dom'
+
   export default{
     props: {
       data: {
@@ -24,6 +33,18 @@
     },
     data(){
       return {}
+    },
+    computed: {
+      shortcutList(){
+        return this.data.map((item) => {
+          return item.title.substr(0, 1)
+        })
+      }
+    },
+    methods: {
+      onShortcutTouchStart(e){
+        let anchorIndex = getData(e.target,'index')
+      }
     }
   }
 </script>
@@ -58,7 +79,7 @@
           color: $color-text-l
           font-size: $font-size-medium
     .list-shortcut
-      position: absolute
+      position: fixed
       z-index: 30
       right: 0
       top: 50%
