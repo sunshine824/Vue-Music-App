@@ -51,8 +51,9 @@
         list.map((item, index) => {
           if (index < HOT_SINGER_LEN) {
             map.hot.items.push(new Singer({
-              id: item.Fsinger_mid,
+              id: item.Fsinger_id,
               name: item.Fsinger_name,
+              mid:item.Fsinger_mid
             }))
           }
 
@@ -64,8 +65,9 @@
             }
           }
           map[key].items.push(new Singer({
-            id: item.Fsinger_mid,
+            id: item.Fsinger_id,
             name: item.Fsinger_name,
+            mid:item.Fsinger_mid
           }))
         })
 
