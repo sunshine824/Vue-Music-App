@@ -29,7 +29,6 @@
     position: sticky
     top: 0
     background: #222
-    z-index: 666
     .tab-item
       flex: 1
       text-align: center
