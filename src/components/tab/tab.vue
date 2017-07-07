@@ -28,7 +28,7 @@
     font-size: $font-size-medium
     position: sticky
     top: 0
-    background: #222
+    background: #1b1b1b
     .tab-item
       flex: 1
       text-align: center
