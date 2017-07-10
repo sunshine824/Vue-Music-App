@@ -7,7 +7,7 @@
           @scroll="scroll"
   >
     <ul>
-      <li class="list-group" v-for="(group,index) in data" key="index" ref="listGroup">
+      <li class="list-group" :class="!fullScreen && playList.length ? 'list-group-play' : ''" v-for="(group,index) in data" key="index" ref="listGroup">
         <h2 class="list-group-title">{{group.title}}</h2>
         <ul>
           <li @click="selectItem(item)" v-for="(item,index) in group.items" class="list-group-item">
@@ -38,6 +38,7 @@
 <script type="text/ecmascript-6">
   import {getData} from '../../common/js/dom'
   import Scroll from '../../base/scroll/scroll'
+  import {mapGetters} from 'vuex'
 
   const ANCHOR_HEIGHT = 18
   const TITLE_HEIGHT = 30
@@ -76,7 +77,11 @@
           return
         }
         return this.data[this.currentIndex] ? this.data[this.currentIndex].title : ''
-      }
+      },
+      ...mapGetters([
+          'fullScreen',
+          'playList'
+      ])
     },
     methods: {
       onShortcutTouchStart(e){
@@ -170,6 +175,8 @@
     height: 100%
     overflow: hidden
     background: $color-background
+    .list-group-play
+      padding-bottom: 28px !important
     .list-group
       padding-bottom: 30px
       .list-group-title
