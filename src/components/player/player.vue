@@ -29,7 +29,7 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <ProgressBar :percent="percent"></ProgressBar>
+              <ProgressBar :percent="percent" @percentChange="onProgressBarChange"></ProgressBar>
             </div>
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
@@ -242,6 +242,12 @@
           len++
         }
         return num
+      },
+      onProgressBarChange(percent){
+        this.$refs.audio.currentTime = percent * this.currentSong.duration
+        if(!this.playing){
+            this.togglePlay()
+        }
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCRREN',
