@@ -229,11 +229,15 @@
         this.songReady = true
       },
       ended(){
-        let index = this.currentIndex + 1
-        if (index === this.playList.length) {
-          index = 0
+        if (this.mode === playMode.loop) {
+          this.loop()
+        } else {
+          this.next()
         }
-        this.setCurrentIndex(index)
+      },
+      loop(){
+        this.$refs.audio.currentTime = 0
+        this.$refs.audio.play()
       },
       error(){
         this.songReady = true
@@ -273,8 +277,11 @@
         this.resetCurrentIndex(list)
         this.setPlayList(list)
       },
-      resetCurrentIndex(list,song){
-
+      resetCurrentIndex(list){
+        let index = list.findIndex((item) => {
+          return item.id === this.currentSong.id
+        })
+        this.setCurrentIndex(index)
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCRREN',
@@ -285,7 +292,10 @@
       })
     },
     watch: {
-      currentSong(){
+      currentSong(newSong, oldSong){
+        if (newSong.id === oldSong.id) {
+          return
+        }
         this.$nextTick(() => {
           this.$refs.audio.play()
         })

@@ -1,5 +1,5 @@
 <template>
-  <div class="progress-bar" ref="progressBar"  @click="progressClick">
+  <div class="progress-bar" ref="progressBar" @click="progressClick">
     <div class="bar-inner">
       <div class="progress" ref="progress"></div>
       <div class="progress-btn-wrapper"
@@ -52,11 +52,14 @@
       triggerPercent(){
         const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
         const percent = this.$refs.progress.clientWidth / barWidth
-        this.$emit('percentChange',percent)
+        this.$emit('percentChange', percent)
       },
       progressClick(e){
-          console.log(e)
-        this.offset(e.offsetX)
+        const rect = this.$refs.progressBar.getBoundingClientRect()
+        const offsetWidth = e.pageX - rect.left
+        this.offset(offsetWidth)
+        //这里当我们点击progressBtn的时候，e.offsetX获取不对
+        //this.offset(e.offsetX)
         this.triggerPercent()
       },
       offset(offsetWidth){
