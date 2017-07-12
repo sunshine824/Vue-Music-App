@@ -15,6 +15,7 @@
 
 <script type="text/ecmascript-6">
   import {prefixStyle} from '../../common/js/dom'
+  import {mapGetters} from 'vuex'
 
   const progressBtnWidth = 16
   const transform = prefixStyle('transform')
@@ -28,8 +29,14 @@
     },
     data(){
       return {
-        touch: {}
+        touch: {},
+        barWidth: 0
       }
+    },
+    computed: {
+      ...mapGetters([
+        'fullScreen'
+      ])
     },
     methods: {
       progressTouchStart(e){
@@ -72,8 +79,12 @@
     watch: {
       percent(newPercent){
         if (newPercent >= 0 && !this.touch.initiated) {
+          if (!this.fullScreen) {
+            return
+          }
           const barWidth = this.$refs.progressBar.clientWidth - progressBtnWidth
           const offsetWidth = newPercent * barWidth
+          //console.log(offsetWidth)
           this.offset(offsetWidth)
         }
       }
