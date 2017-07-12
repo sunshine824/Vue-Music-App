@@ -34,8 +34,8 @@
             <span class="time time-r">{{format(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon i-left">
-              <i class="icon-sequence"></i>
+            <div class="icon i-left" @click="changeMode">
+              <i :class="iconMode"></i>
             </div>
             <div class="icon i-left" :class="disableCls">
               <i class="icon-prev" @click="prev"></i>
@@ -88,6 +88,8 @@
   import {prefixStyle} from '../../common/js/dom'
   import ProgressBar from '../../base/progress-bar/progress-bar'
   import ProgressCircle from '../../base/progress-circle/progress-circle'
+  import {playMode} from '../../common/js/config'
+  import {shuffle} from '../../common/js/util'
 
   const transform = prefixStyle('transform')
 
@@ -100,10 +102,13 @@
       return {
         songReady: false,
         currentTime: 0,
-        redius:32
+        redius: 32
       }
     },
     computed: {
+      iconMode(){
+        return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+      },
       playIcon(){
         return this.playing ? 'icon-pause' : 'icon-play'
       },
@@ -124,7 +129,9 @@
         "playList",
         "currentSong",
         "playing",
-        'currentIndex'
+        'currentIndex',
+        'mode',
+        'sequenceList'
       ])
     },
     methods: {
@@ -250,14 +257,31 @@
       },
       onProgressBarChange(percent){
         this.$refs.audio.currentTime = percent * this.currentSong.duration
-        if(!this.playing){
-            this.togglePlay()
+        if (!this.playing) {
+          this.togglePlay()
         }
+      },
+      changeMode(){
+        const mode = this.mode + 1 < 3 ? this.mode + 1 : 0
+        this.setPlayMode(mode)
+        let list = null
+        if (mode === playMode.random) {
+          list = shuffle(this.sequenceList) //打乱顺序
+        } else {
+          list = this.sequenceList
+        }
+        this.resetCurrentIndex(list)
+        this.setPlayList(list)
+      },
+      resetCurrentIndex(list,song){
+
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCRREN',
         setPlayingState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX'
+        setCurrentIndex: 'SET_CURRENT_INDEX',
+        setPlayMode: 'SET_MODE',
+        setPlayList: 'SET_PLAYLIST'
       })
     },
     watch: {
