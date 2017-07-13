@@ -17,6 +17,11 @@
             <songItem v-for="(item,index) in discList" key="index" :data="item"></songItem>
           </ul>
         </div>
+        <div class="footer">
+          <img src="static/logo2.png" class="footer-logo"/>
+          <p class="copyright">Copyright © 2017 All Rights Reserved </p>
+          <p class="author">作者:chenxin</p>
+        </div>
       </div>
     </scroll>
     <div class="loading-container" v-show="!discList.length">
@@ -143,4 +148,17 @@
         width: 100%
         top: 50%
         transform: translateY(-50%)
+      .footer
+        text-align center
+        border-top:1px solid #4c4c4c
+        margin-top 20px
+        .footer-logo
+            width:120px
+            margin 10px auto 10px auto
+            display block
+        p
+          font-size 11px;
+          color #c5c5c5;
+          margin-bottom 5px
+
 </style>
