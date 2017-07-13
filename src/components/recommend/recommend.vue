@@ -154,7 +154,7 @@
         margin-top 20px
         .footer-logo
             width:120px
-            margin 10px auto 10px auto
+            margin 10px auto 5px auto
             display block
         p
           font-size 11px;
