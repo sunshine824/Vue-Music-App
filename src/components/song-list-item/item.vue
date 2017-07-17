@@ -1,5 +1,5 @@
 <template>
-  <li class="item_music">
+  <li class="item_music" @click="selectItem(data)">
     <a href="javascript:;" class="list_main">
       <div class="list_media">
         <img v-lazy="data.imgurl" class="item_img"/>
@@ -18,10 +18,23 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import {mapMutations} from 'vuex'
+
   export default{
     props: ['data'],
     data(){
       return {}
+    },
+    methods: {
+      selectItem(data){
+        this.$router.push({
+          path: `/recommend/${data.dissid}`
+        })
+        this.setDisc(data)
+      },
+      ...mapMutations({
+        setDisc: 'SET_DISC'
+      })
     }
   }
 </script>

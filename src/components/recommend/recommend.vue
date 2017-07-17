@@ -24,6 +24,7 @@
         </div>
       </div>
     </scroll>
+    <router-view></router-view>
     <div class="loading-container" v-show="!discList.length">
       <loading :title="loading_text"></loading>
     </div>
