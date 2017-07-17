@@ -27,6 +27,7 @@
   import Scroll from '../../base/scroll/scroll'
   import Loading from '../../base/loading/loading'
   import {playListMixin} from '../../common/js/mixin'
+  import {mapMutations} from 'vuex'
 
   export default {
     mixins: [playListMixin],
@@ -59,7 +60,11 @@
         this.$router.push({
           path: `/rank/${item.id}`
         })
-      }
+        this.setTopList(item)
+      },
+      ...mapMutations({
+        setTopList: 'SET_TOP_LIST'
+      })
     }
   }
 </script>

@@ -1,21 +1,31 @@
 <template>
-    <transition name="slide">
-      <music-list></music-list>
-    </transition>
+  <transition name="slide">
+    <music-list :title="title" :bgImage="bgImage"></music-list>
+  </transition>
 </template>
 
 <script type="text/ecmascript-6">
   import MusicList from '../../components/music-list/music-list'
+  import {mapGetters} from 'vuex'
 
   export default{
-      components:{
-        MusicList
+    components: {
+      MusicList
+    },
+    data(){
+      return {}
+    },
+    computed: {
+      title(){
+        return this.topList.topTitle
       },
-      data(){
-          return{
-
-          }
-      }
+      bgImage(){
+        return this.topList.picUrl
+      },
+      ...mapGetters([
+        'topList'
+      ])
+    }
   }
 </script>
 
