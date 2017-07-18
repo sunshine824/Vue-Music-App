@@ -18,6 +18,7 @@
         <loading></loading>
       </div>
     </Scroll>
+    <router-view></router-view>
   </div>
 </template>
 
