@@ -49,14 +49,21 @@
           return
         }
         this.scroll = new BScroll(this.$refs.wrapper, {
-          probeType:this.probeType,
-          click:this.click
+          probeType: this.probeType,
+          click: this.click
         })
-        if(this.listenScroll){
-            let self=this
-            this.scroll.on('scroll',(pos)=>{
-              self.$emit('scroll',pos)
-            })
+        if (this.listenScroll) {
+          let self = this
+          this.scroll.on('scroll', (pos) => {
+            self.$emit('scroll', pos)
+          })
+        }
+        if (this.pullup) {
+          this.scroll.on('scrollEnd', () => {
+            if (this.scroll.y <= (this.scroll.maxScrollY +50)) {
+              this.$emit('scrollToEnd')
+            }
+          })
         }
       },
       disable() {
@@ -77,12 +84,12 @@
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       }
     },
-    watch:{
-        data(){
-            setTimeout(()=>{
-                this.refresh()
-            },20)
-        }
+    watch: {
+      data(){
+        setTimeout(() => {
+          this.refresh()
+        }, 20)
+      }
     }
   }
 </script>

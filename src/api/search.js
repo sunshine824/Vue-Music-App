@@ -18,7 +18,7 @@ export function getHotList() {
   return jsonp(url, data, options)
 }
 
-export function getSearchList(query, page) {
+export function getSearchList(query, page, perpage) {
   const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
 
   const data = Object.assign({}, commonParams, {
@@ -34,8 +34,8 @@ export function getSearchList(query, page) {
     ie: 'utf-8',
     sem: 1,
     aggr: 0,
-    perpage: 20,
-    n: 20,
+    perpage: perpage,
+    n: perpage,
     p: page,
     remoteplace: 'txt.mqq.all'
   })
