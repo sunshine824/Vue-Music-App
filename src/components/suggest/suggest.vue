@@ -1,25 +1,80 @@
 <template>
-    <div class="suggest">
-      <ul class="suggest-list">
-        <li class="suggest-item">
-          <div class="icon">
-            <i></i>
-          </div>
-          <div class="name">
-            <p class="text"></p>
-          </div>
-        </li>
-      </ul>
-    </div>
+  <scroll :data="result" class="suggest">
+    <ul class="suggest-list">
+      <li class="suggest-item" v-for="(item,index) in result">
+        <div class="icon">
+          <i :class="getIconCls(item)"></i>
+        </div>
+        <div class="name">
+          <p class="text" v-html="getDisplayName(item)"></p>
+        </div>
+      </li>
+    </ul>
+  </scroll>
 </template>
 
 <script type="text/ecmascript-6">
-  export default{
-      data(){
-          return{
+  import {getSearchList} from '../../api/search'
+  import {ERR_OK} from '../../api/config'
+  import {filterSinger} from '../../common/js/song'
+  import Scroll from '../../base/scroll/scroll'
 
-          }
+  const TYPE_SINGER = 'singer'
+
+  export default{
+    components: {
+      Scroll
+    },
+    props: {
+      query: {
+        type: String,
+        default: ''
       }
+    },
+    data(){
+      return {
+        page: 1,
+        result: []
+      }
+    },
+    methods: {
+      getDisplayName(item){
+        if (item.type === TYPE_SINGER) {
+          return item.singername
+        } else {
+          return `${item.songname} - ${filterSinger(item.singer)}`
+        }
+      },
+      getIconCls(item){
+        if (item.type === TYPE_SINGER) {
+          return 'icon-mine'
+        } else {
+          return 'icon-music'
+        }
+      },
+      search(){
+        getSearchList(this.query, this.page).then(res => {
+          if (res.code === ERR_OK) {
+            this.result = this._genResult(res.data)
+          }
+        })
+      },
+      _genResult(data){
+        let ret = []
+        if (data.zhida && data.zhida.singerid) {
+          ret.push({...data.zhida, ...{type: TYPE_SINGER}})
+        }
+        if (data.song) {
+          ret = ret.concat(data.song.list)
+        }
+        return ret
+      }
+    },
+    watch: {
+      query(){
+        this.search()
+      }
+    }
   }
 </script>
 
@@ -44,7 +99,7 @@
       .name
         flex: 1
         font-size: $font-size-medium
-        color: $color-text-d
+        color: rgba(249, 249, 249, 0.5);
         overflow: hidden
         .text
           no-wrap()

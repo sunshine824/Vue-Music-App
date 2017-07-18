@@ -1,9 +1,9 @@
 <template>
   <div class="search">
     <div class="search-box-wrapper">
-      <search-box ref="searchBox"></search-box>
+      <search-box ref="searchBox" @query="onQueryChange"></search-box>
     </div>
-    <div class="shortcut-wrapper">
+    <div class="shortcut-wrapper" v-show="!query">
       <div class="shortcut">
         <div class="hot-key">
           <h1 class="title">热门搜索</h1>
@@ -14,6 +14,9 @@
           </ul>
         </div>
       </div>
+    </div>
+    <div class="search-result" v-show="query">
+      <suggest :query="query"></suggest>
     </div>
   </div>
 </template>
@@ -31,21 +34,26 @@
     },
     data(){
       return {
-          hotKey:[]
+        hotKey: [],
+        query: ''
       }
     },
     created(){
       this._getHotList()
     },
     methods: {
+      onQueryChange(query){
+        this.query = query
+      },
       _getHotList(){
         getHotList().then(res => {
           if (res.code === ERR_OK) {
-            this.hotKey=res.data.hotkey.slice(0,10)
+            this.hotKey = res.data.hotkey.slice(0, 10)
           }
         })
       },
       addQuery(query){
+          console.log(query)
         this.$refs.searchBox.setQuery(query)
       }
     }
