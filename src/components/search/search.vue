@@ -16,17 +16,18 @@
         <div class="search-history" v-show="searchHistory.length">
           <h1 class="title">
             <span class="text">搜索历史</span>
-            <span class="clear">
+            <span class="clear" @click="showConfirm">
               <i class="icon-clear"></i>
             </span>
           </h1>
-          <search-history-list :searches="searchHistory"></search-history-list>
+          <search-history-list @select="addQuery" @delete="deleteOne" :searches="searchHistory"></search-history-list>
         </div>
       </div>
     </div>
     <div class="search-result" v-show="query">
       <suggest @select="saveSearch" :query="query" @listScroll="blurInput"></suggest>
     </div>
+    <confirm ref="confirm" text="是否清空所有搜索历史" confirmBtnText="清空" @confirm="clearSearchHistory"></confirm>
     <router-view></router-view>
   </div>
 </template>
@@ -36,14 +37,16 @@
   import {getHotList} from '../../api/search'
   import {ERR_OK} from '../../api/config'
   import Suggest from '../suggest/suggest'
-  import {mapActions,mapGetters} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import searchHistoryList from '../../base/search-history-list/search-history-list'
+  import Confirm from '../../base/confirm/confirm'
 
   export default{
     components: {
       SearchBox,
       Suggest,
-      searchHistoryList
+      searchHistoryList,
+      Confirm
     },
     data(){
       return {
@@ -54,12 +57,21 @@
     created(){
       this._getHotList()
     },
-    computed:{
+    computed: {
       ...mapGetters([
-        'searchHistory'
+        'searchHistory',
       ])
     },
     methods: {
+      showConfirm(){
+        this.$refs.confirm.show()
+      },
+      deleteAll(){
+        this.clearSearchHistory()
+      },
+      deleteOne(item){
+        this.deleteSearchHistory(item)
+      },
       saveSearch(){
         this.saveSearchHistory(this.query)
       },
@@ -81,7 +93,9 @@
         this.$refs.searchBox.setQuery(query)
       },
       ...mapActions([
-        'saveSearchHistory'
+        'saveSearchHistory',
+        'deleteSearchHistory',
+        'clearSearchHistory'
       ])
     }
   }
