@@ -12,6 +12,21 @@ export function shuffle(arr) {
   }
   return _arr
 }
+
+//节流
+export function debounce(func,delay) {
+  let timer
+  return function (...args) {
+    if(timer){
+      clearTimeout(timer)
+    }
+    timer=setTimeout(()=>{
+      func.apply(this,args)
+    },delay)
+  }
+}
+
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
+
