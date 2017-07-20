@@ -17,7 +17,7 @@
               <span class="like">
                   <i class="icon-not-favorite"></i>
                 </span>
-              <span class="delete">
+              <span class="delete" @click.stop="deleteOne(item)">
                   <i class="icon-delete"></i>
                 </span>
             </li>
@@ -38,7 +38,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {mapGetters, mapMutations} from 'vuex'
+  import {mapGetters, mapMutations, mapActions} from 'vuex'
   import Scroll from '../../base/scroll/scroll'
   import {playMode} from '../../common/js/config'
 
@@ -54,10 +54,18 @@
     computed: {
       ...mapGetters([
         'sequenceList',
-        'currentSong'
+        'currentSong',
+        'playList',
+        'mode'
       ])
     },
     methods: {
+      deleteOne(item){
+        this.deleteSong(item)
+        if(!this.playList.length){
+          this.hide()
+        }
+      },
       scrollToCurrent(current){
         const index = this.sequenceList.findIndex((song) => {
           return current.id === song.id
@@ -93,7 +101,10 @@
       ...mapMutations({
         set_current_index: 'SET_CURRENT_INDEX',
         setPlayingState: 'SET_PLAYING_STATE'
-      })
+      }),
+      ...mapActions([
+          'deleteSong'
+        ])
     },
     watch: {
       currentSong(newSong, oldSong){

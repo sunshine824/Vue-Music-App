@@ -242,9 +242,9 @@
         if (!this.songReady) {
           return
         }
-        if(this.playList.length===1){
-            this.loop()
-        }else {
+        if (this.playList.length === 1) {
+          this.loop()
+        } else {
           let index = this.currentIndex + 1
           if (index === this.playList.length) {
             index = 0
@@ -260,9 +260,9 @@
         if (!this.songReady) {
           return
         }
-        if(this.playList.length===1){
+        if (this.playList.length === 1) {
           this.loop()
-        }else {
+        } else {
           let index = this.currentIndex - 1
           if (index === -1) {
             index = this.playList.length - 1
@@ -422,6 +422,9 @@
     },
     watch: {
       currentSong(newSong, oldSong){
+        if (!newSong.id) {
+          return
+        }
         if (newSong.id === oldSong.id) {
           return
         }
@@ -431,7 +434,7 @@
         setTimeout(() => {
           this.$refs.audio.play()
           this.getLyric()
-        },1000)
+        }, 1000)
       },
       playing(newPlaying){
         this.$nextTick(() => {
