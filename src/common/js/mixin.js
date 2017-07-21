@@ -1,9 +1,12 @@
 /**
  * Created by Gatsby on 2017/7/13.
  */
-import {mapGetters} from 'vuex'
-export const playListMixin={
-  computed:{
+import {mapGetters,mapMutations} from 'vuex'
+import {playMode} from '../../common/js/config'
+import {shuffle} from '../../common/js/util'
+
+export const playListMixin = {
+  computed: {
     ...mapGetters([
       'playList'
     ])
@@ -14,14 +17,54 @@ export const playListMixin={
   activated(){
     this.handlePlayList(this.playList)
   },
-  watch:{
+  watch: {
     playList(newVal){
       this.handlePlayList(newVal)
     }
   },
-  methods:{
+  methods: {
     handlePlayList(){
       throw new Error('component must implement handlePlayList method')
     }
+  }
+}
+
+export const playerMixin = {
+  computed: {
+    ...mapGetters([
+      'sequenceList',
+      'currentSong',
+      'playList',
+      'mode'
+    ]),
+    iconMode(){
+      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
+    },
+  },
+  methods:{
+    changeMode(){
+      const mode = this.mode + 1 < 3 ? this.mode + 1 : 0
+      this.setPlayMode(mode)
+      let list = null
+      if (mode === playMode.random) {
+        list = shuffle(this.sequenceList) //打乱顺序
+      } else {
+        list = this.sequenceList
+      }
+      this.resetCurrentIndex(list)
+      this.setPlayList(list)
+    },
+    resetCurrentIndex(list){
+      let index = list.findIndex((item) => {
+        return item.id === this.currentSong.id
+      })
+      this.setCurrentIndex(index)
+    },
+    ...mapMutations({
+      setPlayingState: 'SET_PLAYING_STATE',
+      setCurrentIndex: 'SET_CURRENT_INDEX',
+      setPlayMode: 'SET_MODE',
+      setPlayList: 'SET_PLAYLIST'
+    })
   }
 }

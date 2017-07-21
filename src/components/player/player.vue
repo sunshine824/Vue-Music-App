@@ -111,15 +111,16 @@
   import ProgressBar from '../../base/progress-bar/progress-bar'
   import ProgressCircle from '../../base/progress-circle/progress-circle'
   import {playMode} from '../../common/js/config'
-  import {shuffle} from '../../common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from '../../base/scroll/scroll'
   import Playlist from '../playList/playList'
+  import {playerMixin} from '../../common/js/mixin'
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
 
   export default{
+    mixins: [playerMixin],
     components: {
       ProgressBar,
       ProgressCircle,
@@ -138,9 +139,6 @@
       }
     },
     computed: {
-      iconMode(){
-        return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-      },
       playIcon(){
         return this.playing ? 'icon-pause' : 'icon-play'
       },
@@ -158,12 +156,8 @@
       },
       ...mapGetters([
         "fullScreen",
-        "playList",
-        "currentSong",
         "playing",
-        'currentIndex',
-        'mode',
-        'sequenceList'
+        'currentIndex'
       ])
     },
     created(){
@@ -321,24 +315,6 @@
           this.currentLyric.seek(currentTime * 1000)
         }
       },
-      changeMode(){
-        const mode = this.mode + 1 < 3 ? this.mode + 1 : 0
-        this.setPlayMode(mode)
-        let list = null
-        if (mode === playMode.random) {
-          list = shuffle(this.sequenceList) //打乱顺序
-        } else {
-          list = this.sequenceList
-        }
-        this.resetCurrentIndex(list)
-        this.setPlayList(list)
-      },
-      resetCurrentIndex(list){
-        let index = list.findIndex((item) => {
-          return item.id === this.currentSong.id
-        })
-        this.setCurrentIndex(index)
-      },
       getLyric(){
         this.currentSong.getLyric().then((lyric) => {
           this.currentLyric = new Lyric(lyric, this.handleLyric)
@@ -414,10 +390,6 @@
       },
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCRREN',
-        setPlayingState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX',
-        setPlayMode: 'SET_MODE',
-        setPlayList: 'SET_PLAYLIST'
       })
     },
     watch: {
