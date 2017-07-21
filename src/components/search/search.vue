@@ -43,10 +43,10 @@
   import searchHistoryList from '../../base/search-history-list/search-history-list'
   import Confirm from '../../base/confirm/confirm'
   import Scroll from '../../base/scroll/scroll'
-  import {playListMixin} from '../../common/js/mixin'
+  import {playListMixin, searchMixin} from '../../common/js/mixin'
 
   export default{
-    mixins: [playListMixin],
+    mixins: [playListMixin, searchMixin],
     components: {
       SearchBox,
       Suggest,
@@ -57,7 +57,6 @@
     data(){
       return {
         hotKey: [],
-        query: ''
       }
     },
     created(){
@@ -66,10 +65,7 @@
     computed: {
       shortcut(){
         return this.hotKey.concat(this.searchHistory)
-      },
-      ...mapGetters([
-        'searchHistory',
-      ])
+      }
     },
     methods: {
       handlePlayList(playList){
@@ -88,15 +84,6 @@
       deleteOne(item){
         this.deleteSearchHistory(item)
       },
-      saveSearch(){
-        this.saveSearchHistory(this.query)
-      },
-      blurInput(){
-        this.$refs.searchBox.blur()
-      },
-      onQueryChange(query){
-        this.query = query
-      },
       _getHotList(){
         getHotList().then(res => {
           if (res.code === ERR_OK) {
@@ -104,13 +91,7 @@
           }
         })
       },
-      addQuery(query){
-        console.log(query)
-        this.$refs.searchBox.setQuery(query)
-      },
       ...mapActions([
-        'saveSearchHistory',
-        'deleteSearchHistory',
         'clearSearchHistory'
       ])
     },
