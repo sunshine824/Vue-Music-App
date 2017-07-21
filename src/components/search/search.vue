@@ -78,12 +78,6 @@
       showConfirm(){
         this.$refs.confirm.show()
       },
-      deleteAll(){
-        this.clearSearchHistory()
-      },
-      deleteOne(item){
-        this.deleteSearchHistory(item)
-      },
       _getHotList(){
         getHotList().then(res => {
           if (res.code === ERR_OK) {

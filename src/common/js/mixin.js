@@ -93,6 +93,12 @@ export const searchMixin = {
     addQuery(query){
       this.$refs.searchBox.setQuery(query)
     },
+    deleteAll(){
+      this.clearSearchHistory()
+    },
+    deleteOne(item){
+      this.deleteSearchHistory(item)
+    },
     ...mapActions([
       'saveSearchHistory',
       'deleteSearchHistory',
