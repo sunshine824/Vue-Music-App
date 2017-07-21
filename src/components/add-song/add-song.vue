@@ -28,6 +28,12 @@
       <div class="search-result" v-show="query">
         <suggest :query="query" @select="selectSuggest" @listScroll="blurInput"></suggest>
       </div>
+      <top-tip>
+        <div class="tip-title">
+          <i class="icon-ok"></i>
+          <span class="text">1首歌曲已经添加到列表</span>
+        </div>
+      </top-tip>
     </div>
   </transition>
 </template>
@@ -42,6 +48,7 @@
   import SongList from '../../base/song-list/song-list'
   import Song from '../../common/js/song'
   import SearchList from '../../base/search-history-list/search-history-list'
+  import TopTip from '../../base/top-tip/top-tip'
 
   export default{
     mixins: [searchMixin],
@@ -51,7 +58,8 @@
       Switches,
       Scroll,
       SongList,
-      SearchList
+      SearchList,
+      TopTip
     },
     data(){
       return {
