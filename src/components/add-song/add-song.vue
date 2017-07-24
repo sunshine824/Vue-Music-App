@@ -18,7 +18,7 @@
               <song-list :songs="playHistory" @select="selectSong"></song-list>
             </div>
           </scroll>
-          <scroll ref="searchList" class="list-scroll" v-if="currentIndex===1" :data="searchHistory">
+          <scroll :refreshDelay="refreshDelay" ref="searchList" class="list-scroll" v-if="currentIndex===1" :data="searchHistory">
             <div class="list-inner">
               <search-list :delete="deleteOne" @select="addQuery" :searches="searchHistory"></search-list>
             </div>
@@ -28,7 +28,7 @@
       <div class="search-result" v-show="query">
         <suggest :query="query" @select="selectSuggest" @listScroll="blurInput"></suggest>
       </div>
-      <top-tip>
+      <top-tip ref="topTip">
         <div class="tip-title">
           <i class="icon-ok"></i>
           <span class="text">1首歌曲已经添加到列表</span>
@@ -80,10 +80,12 @@
       selectSong(song, index){
         if (index !== 0) {
           this.insertSong(new Song(song))
+          this.showTip()
         }
       },
       selectSuggest(){
         this.saveSearch()
+        this.showTip()
       },
       show(){
         this.showFlag = true;
@@ -98,8 +100,10 @@
       hide(){
         this.showFlag = false
       },
+      showTip(){
+        this.$refs.topTip.show()
+      },
       switchItem(index){
-          console.log(index)
         this.currentIndex = index
       },
       ...mapActions([
